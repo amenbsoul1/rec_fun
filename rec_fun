@@ -1,0 +1,123 @@
+def linear_sum(x, result):
+    if len(x)==0:
+        flag=(result==0)
+        return  flag
+    else:
+        return linear_sum(x[1:],result-x[0]) or linear_sum(x[1:],result+x[0]) or linear_sum(x[1:],result) #יש 3 מקרים או שמוספים אחד " כאילו מוסיף את המספר מהרשימה" או שמחסירים אותו או שלא משנים כלום ואם מעבירים אגפים אז זה מסתדר.
+    pass
+
+
+def ordered_subset(str1, str2):
+    if str1=='':
+        return False
+    elif str2=='':
+        return True
+    elif str1[0]==str2[0]:
+        return True and not ordered_subset(str1[1:],str2[1:])
+    elif str1[0]!=str2[0]:
+        return False or not ordered_subset(str1[1:],str2)
+def k_size_subsets(n, k):
+    subset=[]
+    start_index=1
+    subset_rec=''
+    subsets_a(n,k,start_index,subset_rec,subset)
+    return subset
+
+    pass
+def subsets_a(n,k,start_index,subset_rec,subset):#i is index in range k
+    if k==0:
+        if subset_rec not in subset:
+            subset.append(subset_rec)
+    elif k>n:
+        return
+    if start_index>n:
+        return
+    subsets_a(n,k-1,start_index+1,subset_rec+str(start_index),subset)
+    subsets_a(n,k,start_index+1,subset_rec,subset)
+
+def dict_depth(d):
+    if type(d)!=dict:
+        raise TypeError ('fuck you i want a dict')
+    count_list=[]
+    for values in d.values():
+        count=0
+        dict_conan(values,count)
+        count_list.append(dict_conan(values,count))
+    return max(count_list)
+def dict_conan(value_key,count):#for dict_depth
+    if type(value_key)!=dict:
+         return count
+    else:
+        count+=1
+        for values in value_key.values():
+           count= dict_conan(values,count)
+    return count
+def nested_get(d, key):
+    value_list=[]
+    for key_a in d:
+        if type(d[key_a])!=dict:
+            if key_a == key:
+                value_list.append(d[key])
+        else:
+            value_of_key(d[key_a],key,value_list)
+    return value_list
+
+def value_of_key(d,key,value_list):#for fun nested_get
+    for key_a in d:
+        if type(d[key_a])!=dict:
+            if key_a == key:
+                value_list.append(d[key])
+        else:
+            value_of_key(d[key_a],key,value_list)
+    return value_list
+def distance(row1, col1, row2, col2):
+    distance_a=abs(row1-row2)+abs(col1-col2)
+    return distance_a
+def add_tower(board:list, d:int, row:int, col:int):
+    distances_new = []
+    for i in range(0, len(board)):
+        if i < row:
+            distances_new.append(distance(row,col,i,board[i]))
+    if distances_new!=[] and min(distances_new)>d:
+        board.pop(row)
+        board.insert(row,col)
+        return True
+    else:
+        return False
+# def n_towers(n, d):
+#     board = [0]*n
+#     for i in range(n):
+#         for j in range(n):
+#             add_tower(board,d,i,j)
+#     if board == [0]*n:
+#         return []
+#     else:
+#         return board
+#
+# print(n_towers(6,2))
+def n_towers(n, d):
+    board = [0]*n
+    i = 0
+    j = 0
+    add_tower_new_board(n,d,board,i,j)
+    if board==[0]*n:
+        return []
+    else:return board
+def add_tower_new_board(n,d,board,i,j):
+    if i>n:
+        return board
+    if not add_tower(board,d,i,j):
+        j+=1
+        add_tower_new_board(n,d,board,i,j)
+        return board
+    else:
+        add_tower(board,d,i,j)
+        return add_tower_new_board(n,d,board,i+1,0)
+# def add_tower_in_col(n,d,board,i,j):
+#     if not add_tower(board,d,i,j):
+#         i+=1
+#         return
+#     else:
+#         add_tower_new_boared(n,d,board,i,j)
+#         return
+print(n_towers(6,3))
